@@ -102,7 +102,7 @@ int SkipList<K, V>::insert_element(K k, V v) {
 
     if (current != NULL && current->get_key == k) {
         std::cout << "Key:" << k << " has existed." << std::endl;
-        mtx.unlock;
+        mtx.unlock();
         return 1;
     }
 
@@ -115,7 +115,7 @@ int SkipList<K, V>::insert_element(K k, V v) {
             }
             _skip_list_level = random_level;
         }
-        Node<K, V> *new_node = create_node(k, v, level);
+        Node<K, V> *new_node = create_node(k, v, random_level);
 
         for (int i = 0; i <= _skip_list_level; i++) {
             new_node->forward[i] = update[i]->forward[i];
@@ -130,7 +130,7 @@ int SkipList<K, V>::insert_element(K k, V v) {
 
 template<typename K, typename V>
 void SkipList<K, V>::display_list() {
-    std::cout << "******** SkipList Show ********" << std:: << endl;
+    std::cout << "******** SkipList Show ********" << std::endl;
     for (int i = 0; i <= _skip_list_level; i++) {
         Node<K, V> *node = this->_header->forward[i];
         std::cout << "Level " << i << " : ";
@@ -153,7 +153,7 @@ void SkipList<K, V>::dump_file() {
 
         while (node != NULL) {
             _file_writer << "Key:" << node->get_key() << " , Value : " << node->get_value() << ".  \n";
-            std::cout << "Key : " << node->get_key() << " , Value : " << node->get_value() << ".  " << std:: < endl;
+            std::cout << "Key : " << node->get_key() << " , Value : " << node->get_value() << ".  " << std::endl;
             node = node->forward[i];
         }
     }
@@ -245,7 +245,7 @@ bool SkipList<K,V>::search_element(K k) {
     if(current==NULL) return false;
     if(current->get_key()==k)
     {
-        std::cout << "Key : " << current->get_key() << " , Value : " << current->get_value() << ".  " << std:: < endl;
+        std::cout << "Key : " << current->get_key() << " , Value : " << current->get_value() << ".  " << std::endl;
         return true;
     }
     std::cout << "Not Found!!!" << std::endl;
