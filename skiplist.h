@@ -1,6 +1,10 @@
-//
-// Created by c3009023 on 2023/10/26.
-//
+
+/********************************************************************************
+* @author: MingYu Wang
+* @email: M.Wang56@newcastle.ac.uk
+* @date: 2023/10/26 17:48
+* @description: 
+********************************************************************************/
 
 #ifndef SKIPLIST_CPP_SKIPLIST_H
 #define SKIPLIST_CPP_SKIPLIST_H
@@ -60,7 +64,7 @@ private:
     int _max_level;
     int _skip_list_level;
 
-    Node<K,V> *header;
+    Node<K,V> *_header;
 
     std::ofstream _file_writer;
     std::ifstream _file_reader;
