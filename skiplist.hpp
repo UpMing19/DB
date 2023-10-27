@@ -55,7 +55,7 @@ public:
     void dump_file();
     void load_file();
     int size();
-    void clear(Node<K, V> *);
+    void clear(Node<K, V> *,int );
 
 private:
     bool is_valid_string(const std::string &str);
@@ -131,20 +131,24 @@ SkipList<K, V>::~SkipList()
         _file_reader.close();
     if (_file_writer.is_open())
         _file_writer.close();
+    // for(int i = 0 ;i<_skip_list_level; i++){
+    //      if (_header->forward[i] != NULL)
+    //     clear(_header->forward[0],i);
+    // }
 
     if (_header->forward[0] != NULL)
     {
-        clear(_header->forward[0]);
+        clear(_header->forward[0],0);
     }
 
     delete _header;
 }
 
 template <typename K, typename V>
-void SkipList<K, V>::clear(Node<K, V> *node)
+void SkipList<K, V>::clear(Node<K, V> *node,int level)
 {
-    if (node->forward[0] != NULL)
-        clear(node->forward[0]);
+    if (node->forward[level] != NULL)
+        clear(node->forward[level],level);
     delete(node);
 }
 
