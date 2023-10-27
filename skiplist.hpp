@@ -90,8 +90,8 @@ Node<K, V>::Node(K k, V v, int level)
 
 template <typename K, typename V>
 Node<K, V>::~Node(){
-    for(int i =0; i<this->node_level+1 ;i++)
-        delete []forward[i];
+    // for(int i =0; i<this->node_level+1 ;i++)
+    //     delete []forward[i];
     delete []forward;
 }
 
