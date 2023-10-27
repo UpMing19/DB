@@ -5,7 +5,7 @@
 int main()
 {
 
-    SkipList<int, std::string> skipList(100);
+    SkipList<int, std::string> skipList(10000);
 
     skipList.insert_element(1, "A");
     skipList.insert_element(3, "AB");
