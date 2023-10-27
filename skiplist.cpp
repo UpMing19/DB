@@ -70,7 +70,16 @@ int SkipList<K, V>::get_random_level() {
         level += 1;
     return (level < ZSKIPLIST_MAXLEVEL) ? level : ZSKIPLIST_MAXLEVEL;
 }
+// template<typename K, typename V>
+// int SkipList<K, V>::get_random_level(){
 
+//     int k = 1;
+//     while (rand() % 2) {
+//         k++;
+//     }
+//     k = (k < _max_level) ? k : _max_level;
+//     return k;
+// }
 template<typename K, typename V>
 int SkipList<K, V>::size() {
     return _element_count;
@@ -100,16 +109,15 @@ int SkipList<K, V>::insert_element(K k, V v) {
 
     current = current->forward[0]; // will replace this node
 
-    if (current != NULL && current->get_key == k) {
+    if (current != NULL && current->get_key() == k) {
         std::cout << "Key:" << k << " has existed." << std::endl;
         mtx.unlock();
         return 1;
     }
 
-    if (current == NULL || current->get_key == k) {
+    if (current == NULL || current->get_key() == k) {
         int random_level = get_random_level();
         if (random_level > _skip_list_level) {
-            // TODO:why update it
             for (int i = _skip_list_level + 1; i <= random_level; i++) {
                 update[i] = _header;
             }
@@ -117,7 +125,7 @@ int SkipList<K, V>::insert_element(K k, V v) {
         }
         Node<K, V> *new_node = create_node(k, v, random_level);
 
-        for (int i = 0; i <= _skip_list_level; i++) {
+        for (int i = 0; i <= random_level; i++) {
             new_node->forward[i] = update[i]->forward[i];
             update[i]->forward[i] = new_node;
         }
