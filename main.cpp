@@ -1,11 +1,11 @@
-#include "skiplist.cpp"
+#include "skiplist.hpp"
 
 #define FILE_PATH "./store/dumpFile.txt"
 
 int main()
 {
 
-    SkipList<int, std::string> skipList(10000);
+    SkipList<int, std::string> skipList(10);
 
     skipList.insert_element(1, "A");
     skipList.insert_element(3, "AB");
