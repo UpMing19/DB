@@ -14,8 +14,8 @@
 #include <mutex>
 #include <fstream>
 
-#define  STORE_FILE "store/dumpFile"
-
+#define  STORE_FILE "./store/dumpFile"
+#define  READ_FILE  "./store/readFile"
 
 std::mutex mtx;
 std::string delimiter = ":";
@@ -236,7 +236,7 @@ void SkipList<K, V>::dump_file() {
 template<typename K, typename V>
 void SkipList<K, V>::load_file() {
     std::cout << "********LoadFile********" << std::endl;
-    _file_reader.open(STORE_FILE);
+    _file_reader.open(READ_FILE);
     std::string line;
     std::string *key = new std::string();
     std::string *value = new std::string();
@@ -273,9 +273,11 @@ void SkipList<K, V>::delete_element(K k) {
     mtx.lock();
     Node<K, V> *update[_max_level + 1];
     Node<K, V> *current = this->_header;
+    memset(update, 0, sizeof(Node<K, V>*)*(_max_level+1));
+
 
     for (int i = _skip_list_level; i >= 0; i--) {
-        while (current->forward[i] != NULL && current->get_key() < k)
+        while (current->forward[i] != NULL && current->forward[i]->get_key() < k)
             current = current->forward[i];
         update[i] = current;
     }
@@ -288,7 +290,7 @@ void SkipList<K, V>::delete_element(K k) {
     }
 
     for(int i =0 ;i<=_skip_list_level; i++) {
-        if(update[i]->forward[0] != current)
+        if(update[i]->forward[i] != current)
             break;
         update[i]->forward[i] = current->forward[i];
     }
@@ -297,7 +299,7 @@ void SkipList<K, V>::delete_element(K k) {
     delete current;
     _element_count--;
 
-    std::cout << "Delete Successful!!!" << std::endl;
+    std::cout << "Delete Key:"<<k <<" Successful!!!" << std::endl;
     mtx.unlock();
     return ;
 }

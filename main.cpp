@@ -1,24 +1,35 @@
 #include "skiplist.hpp"
 
-#define FILE_PATH "./store/dumpFile.txt"
 
 int main()
 {
+ SkipList<int, std::string> skipList(60);
+	skipList.insert_element(1, "DaMing"); 
+	skipList.insert_element(3, "Lin"); 
+	skipList.insert_element(7, "Ding"); 
+	skipList.insert_element(8, "Shane"); 
+	skipList.insert_element(9, "Cheriy"); 
+	skipList.insert_element(19, "Biliy"); 
+	skipList.insert_element(19, "Lu"); 
 
-    SkipList<int, std::string> skipList(10);
+    std::cout << "skipList size:" << skipList.size() << std::endl;
 
-    skipList.insert_element(1, "A");
-    skipList.insert_element(3, "AB");
-    skipList.insert_element(5, "C");
-    skipList.insert_element(7, "D");
-    skipList.insert_element(19, "ADD");
-    skipList.insert_element(13, "ADB");
-    skipList.insert_element(15, "D");
-    skipList.insert_element(7, "DDD");
+    skipList.dump_file();
 
-    skipList.display_list();
+    // // skipList.load_file();
+
+    // skipList.search_element(9);
+    // skipList.search_element(18);
 
 
+    // skipList.display_list();
+
+     skipList.delete_element(3);
+     skipList.delete_element(7);
+
+    // std::cout << "skipList size:" << skipList.size() << std::endl;
+
+    // skipList.display_list();
 
     return 0;
 }
