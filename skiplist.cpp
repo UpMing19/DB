@@ -115,7 +115,7 @@ int SkipList<K, V>::insert_element(K k, V v) {
         return 1;
     }
 
-    if (current == NULL || current->get_key() == k) {
+    if (current == NULL || current->get_key() != k) {
         int random_level = get_random_level();
         if (random_level > _skip_list_level) {
             for (int i = _skip_list_level + 1; i <= random_level; i++) {
