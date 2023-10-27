@@ -55,6 +55,7 @@ public:
     void dump_file();
     void load_file();
     int size();
+    void clear(Node<K, V> *);
 
 private:
     bool is_valid_string(const std::string &str);
@@ -84,13 +85,14 @@ Node<K, V>::Node(K k, V v, int level)
     this->key = k;
     this->node_level = level;
     this->forward = new Node<K, V> *[level + 1];
-    memset(this->forward, 0, sizeof(Node<K, V>) * (level + 1));
+    memset(this->forward, 0, sizeof(Node<K, V>*) * (level + 1) );
 }
 
 template <typename K, typename V>
-Node<K, V>::~Node()
-{
-    delete[] forward;
+Node<K, V>::~Node(){
+    for(int i =0; i<this->node_level+1 ;i++)
+        delete []forward[i];
+    delete []forward;
 }
 
 template <typename K, typename V>
@@ -129,7 +131,21 @@ SkipList<K, V>::~SkipList()
         _file_reader.close();
     if (_file_writer.is_open())
         _file_writer.close();
+
+    if (_header->forward[0] != NULL)
+    {
+        clear(_header->forward[0]);
+    }
+
     delete _header;
+}
+
+template <typename K, typename V>
+void SkipList<K, V>::clear(Node<K, V> *node)
+{
+    if (node->forward[0] != NULL)
+        clear(node->forward[0]);
+    delete(node);
 }
 
 template <typename K, typename V>
