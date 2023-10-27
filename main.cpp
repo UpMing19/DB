@@ -7,16 +7,17 @@ int main()
 
     SkipList<int, std::string> skipList(10);
 
-    skipList.insert_element(1, "A");
-    skipList.insert_element(3, "AB");
-    skipList.insert_element(5, "C");
-    skipList.insert_element(7, "D");
-    skipList.insert_element(19, "ADD");
-    skipList.insert_element(13, "ADB");
-    skipList.insert_element(15, "D");
-    skipList.insert_element(7, "DDD");
+    //skipList.insert_element(1, "A");
+    // skipList.insert_element(3, "AB");
+    // skipList.insert_element(5, "C");
+    // skipList.insert_element(7, "D");
+    // skipList.insert_element(19, "ADD");
+    // skipList.insert_element(13, "ADB");
+    // skipList.insert_element(15, "D");
+    // skipList.insert_element(7, "DDD");
 
-    skipList.display_list();
+   // skipList.display_list();
+    //skipList.dump_file();
 
 
 
