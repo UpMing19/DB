@@ -18,8 +18,8 @@ int main()
 
     // // skipList.load_file();
 
-    // skipList.search_element(9);
-    // skipList.search_element(18);
+     skipList.search_element(9);
+    skipList.search_element(18);
 
 
     // skipList.display_list();
@@ -27,9 +27,9 @@ int main()
      skipList.delete_element(3);
      skipList.delete_element(7);
 
-    // std::cout << "skipList size:" << skipList.size() << std::endl;
+     std::cout << "skipList size:" << skipList.size() << std::endl;
 
-    // skipList.display_list();
+     skipList.display_list();
 
     return 0;
 }
