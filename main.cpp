@@ -3,7 +3,7 @@
 int main()
 {
     SkipList<int, std::string> skipList(4);
-    skipList.insert_element(1, "发");
+    skipList.insert_element(1, "发fa发发发fa发发啊发发fa发发啊发发fa发发啊发发fa发发啊发发fa发发啊发发fa发发啊发发fa发发啊发发fa发发啊发啊发");
     skipList.insert_element(3, "Lin");
     skipList.insert_element(7, "Ding");
     skipList.insert_element(8, "Shane");
@@ -14,7 +14,7 @@ int main()
 
     // // skipList.load_file();
 
-  //  skipList.search_element(7);
+    skipList.search_element(7);
    // skipList.search_element(18);
 
     // skipList.display_list();
