@@ -43,15 +43,15 @@ LogBuffer::~LogBuffer()
 
 Logger::Logger()
 {
-
-}
-
-Logger::~Logger()
-{
+    level = LogLevel::INFO;
+    fp =nullptr;
+    buftotalnum = 0;
+    start = false;
 }
 
 void Logger::init(const char *logdir, LogLevel lev)
 {
+     
 }
 void Logger::append(int level, const char *file, int line, const char *func, const char *fmt, ...)
 {
@@ -59,5 +59,9 @@ void Logger::append(int level, const char *file, int line, const char *func, con
 
 void Logger::flush()
 {
-    
+
+}
+
+Logger::~Logger()
+{
 }
