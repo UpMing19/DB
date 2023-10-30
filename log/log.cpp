@@ -44,14 +44,13 @@ LogBuffer::~LogBuffer()
 Logger::Logger()
 {
     level = LogLevel::INFO;
-    fp =nullptr;
+    fp = nullptr;
     buftotalnum = 0;
     start = false;
 }
 
 void Logger::init(const char *logdir, LogLevel lev)
 {
-     
 }
 void Logger::append(int level, const char *file, int line, const char *func, const char *fmt, ...)
 {
@@ -59,7 +58,29 @@ void Logger::append(int level, const char *file, int line, const char *func, con
 
 void Logger::flush()
 {
+    start = true;
 
+    while (1)
+    {
+        LogBuffer *p;
+        {
+            std::unique_lock<std::mutex> lock(flushmutx);
+            while (start == true && flushbufqueue.empty())
+                flushcond.wait(lock);
+
+            if (start == false || flushbufqueue.empty())
+                return;
+            p = flushbufqueue.front();
+            flushbufqueue.pop();
+        }
+        
+        p->flush_to_file(fp);
+        p->set_state(LogBuffer::BufState::FREE);
+        {
+            std::lock_guard<std::mutex> lock2(freemtx);
+            freebufqueue.push(p);
+        }
+    }
 }
 
 Logger::~Logger()
