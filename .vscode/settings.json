@@ -71,6 +71,7 @@
         "utility": "cpp",
         "filesystem": "cpp",
         "__memory": "cpp",
-        "memory_resource": "cpp"
+        "memory_resource": "cpp",
+        "thread": "cpp"
     }
 }

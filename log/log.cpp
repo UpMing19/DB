@@ -51,6 +51,21 @@ Logger::Logger()
 
 void Logger::init(const char *logdir, LogLevel lev)
 {
+    time_t t = time(nullptr);
+    struct tm *ptm = localtime(&t);
+
+    char logfilepath[256] = {0};
+    snprintf(logfilepath,255,"%s/log_%d_%d_%d",logdir,ptm->tm_year+1900,ptm->tm_mon+1,ptm->tm_mday);
+    level = lev;
+
+    fp = fopen(logfilepath,"w+");
+    if(fp==nullptr){
+        printf("logfile opne fail!\n");
+    }
+
+    flushthread = std::thread(&Logger::Flush,this);
+    return ;
+
 }
 void Logger::append(int level, const char *file, int line, const char *func, const char *fmt, ...)
 {
