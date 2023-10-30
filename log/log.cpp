@@ -63,7 +63,7 @@ void Logger::init(const char *logdir, LogLevel lev)
         printf("logfile opne fail!\n");
     }
 
-    flushthread = std::thread(&Logger::Flush,this);
+    flushthread = std::thread(&Logger::flush,this);
     return ;
 
 }
@@ -88,11 +88,11 @@ void Logger::flush()
             p = flushbufqueue.front();
             flushbufqueue.pop();
         }
-        
+
         p->flush_to_file(fp);
         p->set_state(LogBuffer::BufState::FREE);
         {
-            std::lock_guard<std::mutex> lock2(freemtx);
+            std::lock_guard<std::mutex> lock(freemtx);
             freebufqueue.push(p);
         }
     }
@@ -100,4 +100,36 @@ void Logger::flush()
 
 Logger::~Logger()
 {
+    std::cout<<"---start ~Logger ---"<<std::endl;   
+    {
+        std::lock_guard<std::mutex>lock(mtx);
+        std::map<std::thread::id, LogBuffer *>::iterator it;
+        for(it = threadbufmap.begin();it!=threadbufmap.end();it++){
+            it->second->set_state(LogBuffer::BufState::FLUSH);
+            {
+                std::lock_guard<std::mutex>lock(flushmutx);
+                flushbufqueue.push(it->second);
+            }
+        }
+    }
+
+    flushcond.notify_one();
+    start = false;
+    flushcond.notify_one();
+
+    if(flushthread.joinable())
+        flushthread.join();
+        
+    if(fp!=nullptr)
+        fclose(fp);
+    while(!freebufqueue.empty()){
+        LogBuffer *p = freebufqueue.front();
+        freebufqueue.pop();
+        delete p;
+    }
+    while(!flushbufqueue.empty()){
+        LogBuffer *p = flushbufqueue.front();
+        flushbufqueue.pop();
+        delete p;
+    }
 }
