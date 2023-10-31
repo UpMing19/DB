@@ -32,14 +32,14 @@ class Logger;
 
 #define LOG_INIT(logdir,level) \
     do{ \
-        Logger::GetInstance->init(logdir,level); \
+        Logger::GetInstance()->init(logdir,level); \
     }while(0)
 
 
-#define LOG(level,fmt,...) \
+#define LOG(level,fmt, ...) \
     do{ \
-        if(Logger::GetInstance->get_level() <= level){ \
-            Logger::GetInstance->append(level,__FILE__,__LINE__,__FUNCTION__,fmt,__VA_ARGS__); \
+        if(Logger::GetInstance()->get_level() <= level){ \
+            Logger::GetInstance()->append(level,__FILE__,__LINE__,__FUNCTION__,fmt,__VA_ARGS__); \
         } \
     }while(0)
 
