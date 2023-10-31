@@ -69,6 +69,8 @@ void Logger::init(const char *logdir, LogLevel lev)
 }
 void Logger::append(int level, const char *file, int line, const char *func, const char *fmt, ...)
 {
+
+    
 }
 
 void Logger::flush()
@@ -119,7 +121,7 @@ Logger::~Logger()
 
     if(flushthread.joinable())
         flushthread.join();
-        
+
     if(fp!=nullptr)
         fclose(fp);
     while(!freebufqueue.empty()){
