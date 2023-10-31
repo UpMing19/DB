@@ -56,14 +56,13 @@ void synctest() {
 }
 
 //单线程异步写入测试
-static int logs = 100 * 1000;
+static int logs = 100 * 10000;
 void single_thread_test() {    
     printf("single_thread_test...\n");
     uint64_t start_ts = get_current_millis();
     for (int i = 0;i < logs; ++i)
     {
-      
-        LOG(LogLevel::ERROR,"log test %d\n",i);
+        LOG(LogLevel::ERROR, "log test %d\n", i);
     }
     uint64_t end_ts = get_current_millis();
     printf("1 million times logtest, time use %lums, %ldw logs/second\n", end_ts - start_ts, logs/(end_ts - start_ts)/10);
@@ -103,6 +102,6 @@ int main(int argc, char** argv)
     single_thread_test();
 
     //multi thread test
-  //  multi_thread_test();
+   // multi_thread_test();
 
 }

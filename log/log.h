@@ -50,7 +50,7 @@ enum LogLevel
     INFO,
     WARNING,
     ERROR,
-    FATAL,
+    FATAL
 };
 
 class LogBuffer
@@ -59,7 +59,7 @@ public:
     enum BufState
     {
         FREE = 0,
-        FLUSH,
+        FLUSH = 1
     };
     LogBuffer(int size = BUFSIZ);
     ~LogBuffer();
