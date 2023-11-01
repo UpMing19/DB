@@ -97,7 +97,7 @@ int main(int argc, char** argv)
     //synctest();
 
     //my test
-    LOG_INIT("../store/", LogLevel::INFO);
+    LOG_INIT("./store", LogLevel::INFO);
     //single thread test
     single_thread_test();
 
