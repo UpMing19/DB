@@ -13,8 +13,8 @@
 #include <mutex>
 #include <fstream>
 
-#define STORE_FILE "./store/dumpFile"
-#define READ_FILE "./store/readFile"
+#define STORE_FILE "../store/dumpFile"
+#define READ_FILE "../store/readFile"
 
 std::mutex mtx;
 std::string delimiter = ":";
