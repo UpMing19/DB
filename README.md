@@ -16,8 +16,8 @@ SkipList
 
 #LOG TEST
     g++ -g -Wall -O2 -pthread -std=c++11 test/log_test.cpp log/log.cpp -o bin/logtest
-
-
+#SkipList TEST
+    g++ -g -Wall -O2 -pthread -std=c++11 test/skiplist_test.cpp DB/skiplist.hpp  log/log.cpp -o bin/skiplist
 
 1. 持久化模块:
 使你的数据在系统重启后依然可以恢复。

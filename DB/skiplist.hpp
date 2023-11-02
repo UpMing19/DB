@@ -12,6 +12,7 @@
 #include <cstring>
 #include <mutex>
 #include <fstream>
+#include "../log/log.h"
 
 #define STORE_FILE "../store/dumpFile"
 #define READ_FILE "../store/readFile"
@@ -55,7 +56,7 @@ public:
     void dump_file();
     void load_file();
     int size();
-    void clear(Node<K, V> *,int );
+    void clear(Node<K, V> *, int);
 
 private:
     bool is_valid_string(const std::string &str);
@@ -85,14 +86,15 @@ Node<K, V>::Node(K k, V v, int level)
     this->key = k;
     this->node_level = level;
     this->forward = new Node<K, V> *[level + 1];
-    memset(this->forward, 0, sizeof(Node<K, V>*) * (level + 1) );
+    memset(this->forward, 0, sizeof(Node<K, V> *) * (level + 1));
 }
 
 template <typename K, typename V>
-Node<K, V>::~Node(){
+Node<K, V>::~Node()
+{
     // for(int i =0; i<this->node_level+1 ;i++)
     //     delete []forward[i];
-    delete []forward;
+    delete[] forward;
 }
 
 template <typename K, typename V>
@@ -138,18 +140,18 @@ SkipList<K, V>::~SkipList()
 
     if (_header->forward[0] != NULL)
     {
-        clear(_header->forward[0],0);
+        clear(_header->forward[0], 0);
     }
 
     delete _header;
 }
 
 template <typename K, typename V>
-void SkipList<K, V>::clear(Node<K, V> *node,int level)
+void SkipList<K, V>::clear(Node<K, V> *node, int level)
 {
     if (node->forward[level] != NULL)
-        clear(node->forward[level],level);
-    delete(node);
+        clear(node->forward[level], level);
+    delete (node);
 }
 
 template <typename K, typename V>
@@ -208,6 +210,7 @@ int SkipList<K, V>::insert_element(K k, V v)
 
     if (current != NULL && current->get_key() == k)
     {
+        LOG(LogLevel::DEBUG, "Key:%d has existed\n", k);
         std::cout << "Key:" << k << " has existed." << std::endl;
         mtx.unlock();
         return 1;
@@ -231,6 +234,7 @@ int SkipList<K, V>::insert_element(K k, V v)
             new_node->forward[i] = update[i]->forward[i];
             update[i]->forward[i] = new_node;
         }
+        LOG(LogLevel::DEBUG, "Successful insert Key:%d\n", v);
         std::cout << "Successful insert Key:" << k << " Value: " << v << std::endl;
         _element_count++;
     }
@@ -241,6 +245,7 @@ int SkipList<K, V>::insert_element(K k, V v)
 template <typename K, typename V>
 void SkipList<K, V>::display_list()
 {
+    LOG(LogLevel::INFO, "******** SkipList Show ********\n");
     std::cout << "******** SkipList Show ********" << std::endl;
     for (int i = 0; i <= _skip_list_level; i++)
     {
@@ -259,6 +264,7 @@ void SkipList<K, V>::display_list()
 template <typename K, typename V>
 void SkipList<K, V>::dump_file()
 {
+    LOG(LogLevel::INFO, "******** DumpFile********\n");
     std::cout << "********DumpFile********" << std::endl;
     _file_writer.open(STORE_FILE);
 
@@ -280,6 +286,7 @@ void SkipList<K, V>::dump_file()
 template <typename K, typename V>
 void SkipList<K, V>::load_file()
 {
+    LOG(LogLevel::INFO, "******** LoadFile********\n");
     std::cout << "********LoadFile********" << std::endl;
     _file_reader.open(READ_FILE);
     std::string line;
@@ -305,7 +312,11 @@ template <typename K, typename V>
 void SkipList<K, V>::get_key_value_from_string(const std::string &str, std::string *key, std::string *value)
 {
     if (!is_valid_string(str))
+    {
+        LOG(LogLevel::ERROR, "str is valid string!\n");
         return;
+    }
+
     *key = str.substr(0, str.find(delimiter));
     *value = str.substr(str.find(delimiter) + 1, str.size());
 }
@@ -314,9 +325,17 @@ template <typename K, typename V>
 bool SkipList<K, V>::is_valid_string(const std::string &str)
 {
     if (str.empty())
+    {
+        LOG(LogLevel::DEBUG, "str is empty!\n");
         return false;
+    }
+
     if (str.find(delimiter) == std::string::npos)
+    {
+        LOG(LogLevel::DEBUG, "str ihas no npos!\n");
         return false;
+    }
+
     return true;
 }
 
@@ -340,6 +359,7 @@ void SkipList<K, V>::delete_element(K k)
     {
         std::cout << "Key not exist" << std::endl;
         mtx.unlock();
+          LOG(LogLevel::DEBUG,"Key not exist!\n" );
         return;
     }
 
@@ -353,7 +373,7 @@ void SkipList<K, V>::delete_element(K k)
         _skip_list_level--;
     delete current;
     _element_count--;
-
+    LOG(LogLevel::DEBUG,"Delete Key:%d,Successful!!!\n",k );
     std::cout << "Delete Key:" << k << " Successful!!!" << std::endl;
     mtx.unlock();
     return;
@@ -380,6 +400,7 @@ bool SkipList<K, V>::search_element(K k)
         std::cout << "Key : " << current->get_key() << " , Value : " << current->get_value() << ".  " << std::endl;
         return true;
     }
+     LOG(LogLevel::DEBUG,"Not Found!!!\n" );
     std::cout << "Not Found!!!" << std::endl;
     return false;
 }
