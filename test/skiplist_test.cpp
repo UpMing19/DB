@@ -21,5 +21,6 @@ int main(int argc, char **argv)
     sk.insert_element(123, "a");
     sk.insert_element(314, "asg");
     sk.display_list();
+    sk.dump_file();
 
 }

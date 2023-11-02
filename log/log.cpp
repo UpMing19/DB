@@ -234,4 +234,5 @@ Logger::~Logger()
         flushbufqueue.pop();
         delete p;
     }
+    
 }
