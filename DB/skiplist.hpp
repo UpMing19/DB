@@ -274,7 +274,7 @@ void SkipList<K, V>::dump_file()
 
         while (node != NULL)
         {
-            _file_writer << "Key:" << node->get_key() << " , Value : " << node->get_value() << ".  \n";
+            _file_writer << "Key:" << node->get_key() << ",Value:" << node->get_value() << ".  \n";
             std::cout << "Key : " << node->get_key() << " , Value : " << node->get_value() << ".  " << std::endl;
             node = node->forward[i];
         }
