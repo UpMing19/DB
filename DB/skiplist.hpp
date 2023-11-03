@@ -85,7 +85,7 @@ public:
     void insert_key(const K &key, const V &value)
     {
         mtx.lock();
-        LOG(LogLevel::INFO,"insert now");
+        LOG(LogLevel::INFO,"insert now\n");
         if (key > max)
         {
             max = key;
@@ -194,7 +194,7 @@ public:
 
     void dump_file()
     {
-        LOG(LogLevel::INFO, "start dump file....");
+        LOG(LogLevel::INFO, "start dump file....\n");
         _file_writer.open(store_file);
         Node *cur = p_listHead->_forward[1];
         int num = 0;
@@ -206,12 +206,12 @@ public:
         }
         _file_writer.flush();
         _file_writer.close();
-        LOG(LogLevel::INFO, "finish dump file....");
+        LOG(LogLevel::INFO, "finish dump file....\n");
     }
 
     void load_file()
     {
-        LOG(LogLevel::INFO, "start load file....");
+        LOG(LogLevel::INFO, "start load file....\n");
 
         _file_reader.open(store_file);
 
@@ -223,7 +223,7 @@ public:
             insert_key(stoi(key), value);
         }
         _file_reader.close();
-        LOG(LogLevel::INFO, "finish  load file....");
+        LOG(LogLevel::INFO, "finish  load file....\n");
     }
 
     vector<KVPair<K, V>> get_all()
