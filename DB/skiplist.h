@@ -7,8 +7,13 @@
 #include <random>
 #include <vector>
 #include <string>
+#include <fstream>
 
 using namespace std;
+
+#define store_file "../store/dumFile"
+
+mutex mtx;
 
 template <class K, class V, unsigned MAXLEVEL>
 class SkipList_Node
@@ -75,6 +80,7 @@ public:
 
     void insert_key(const K &key, const V &value)
     {
+        mtx.lock();
         if (key > max)
         {
             max = key;
@@ -120,11 +126,13 @@ public:
             }
             ++_n;
         }
+        mtx.unlock();
     }
 
     void delete_key(const K &searchKey)
     {
-        //            SkipList_Node<K,V,MAXLEVEL>* update[MAXLEVEL];
+
+        mtx.lock();
         Node *update[MAXLEVEL];
         Node *currNode = p_listHead;
         for (int level = cur_max_level; level >= 1; level--)
@@ -154,9 +162,10 @@ public:
             }
         }
         _n--;
+        mtx.unlock();
     }
 
-    V lookup(const K &searchKey, bool &found)
+    V search_key(const K &searchKey, bool &found)
     {
         Node *currNode = p_listHead;
         for (int level = cur_max_level; level >= 1; level--)
@@ -176,6 +185,40 @@ public:
         {
             return (V)NULL;
         }
+    }
+
+    void dump_file()
+    {
+        LOG(LogLevel::INFO, "start dump file....");
+        _file_writer.open(store_file);
+        Node *cur = p_listHead->_forward[1];
+        int num = 0;
+        while (cur != p_listTail)
+        {
+            _file_writer << cur->key << ":" << cur->value << endl;
+            LOG(LogLevel::INFO, "%d key has dump\n", ++num);
+            cur = cur->_forward[1];
+        }
+        _file_writer.flush();
+        _file_writer.close();
+           LOG(LogLevel::INFO, "finish dump file....");
+    }
+
+    void load_file()
+    {
+        LOG(LogLevel::INFO, "start load file....");
+
+        _file_reader.open(store_file);
+
+       
+        string line,key,value;
+        while(getline(_file_reader,line)){
+            key = line.substr(0,line.find(":"));
+            value = line.substr(line.find(":")+1,line.length());
+            insert_key(key,value);
+        }
+        _file_reader.close();
+   LOG(LogLevel::INFO, "finish  load file....");
     }
 
     vector<KVPair<K, V>> get_all()
@@ -217,7 +260,7 @@ public:
 
     bool eltIn(K &key)
     {
-        return lookup(key);
+        return search_key(key);
     }
 
     inline bool empty()
@@ -250,8 +293,7 @@ public:
         return _n * (sizeof(K) + sizeof(V));
     }
 
-    //    private:
-
+private:
     int generateNodeLevel()
     {
 
@@ -272,6 +314,8 @@ public:
     Node *p_listHead;
     Node *p_listTail;
     uint32_t _keysPerLevel[MAXLEVEL];
+    ofstream _file_writer;
+    ifstream _file_reader;
 };
 
 /*

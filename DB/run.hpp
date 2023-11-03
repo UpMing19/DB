@@ -44,4 +44,6 @@ public:
     virtual void set_size(const unsigned long size) = 0;
     virtual vector<KVPair<K, V>> get_all() = 0;
     virtual vector<KVPair<K, V>> get_all_in_arnge(const key &key1, const key &key2) = 0;
+    virtual void dump_file();
+    virtual void load_file();
 };
