@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __SKIPLIST_RUN__
+#define __SKIPLIST_RUN__
 
 #include <stdio.h>
 #include <cstdint>
@@ -43,7 +44,14 @@ public:
     virtual unsigned long long num_elements() = 0;
     virtual void set_size(const unsigned long size) = 0;
     virtual vector<KVPair<K, V>> get_all() = 0;
-    virtual vector<KVPair<K, V>> get_all_in_arnge(const key &key1, const key &key2) = 0;
-    virtual void dump_file();
-    virtual void load_file();
+    virtual vector<KVPair<K, V>> get_all_in_range(const K &key1, const K &key2) = 0;
+    virtual void dump_file()=0;
+    virtual void load_file()=0;
 };
+
+template <class K, typename V>
+Run<K,V>::~Run(){
+
+}
+
+#endif

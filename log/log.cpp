@@ -168,6 +168,7 @@ void Logger::append(int level, const char *file, int line, const char *func, con
             }
         }
     }
+    
 }
 
 void Logger::flush()
@@ -176,6 +177,7 @@ void Logger::flush()
 
     while (true)
     {
+        //std::cout<<"##"<<std::endl;
         LogBuffer *p;
         {
             std::unique_lock<std::mutex> lock(flushmutx);
@@ -212,7 +214,7 @@ Logger::~Logger()
             }
         }
     }
-
+ std::cout << "---start ~Logger2 ---" << std::endl;
     flushcond.notify_one();
     start = false;
     flushcond.notify_one();
@@ -222,12 +224,14 @@ Logger::~Logger()
 
     if (fp != nullptr)
         fclose(fp);
+         std::cout << "---start ~Logger3 ---" << std::endl;
     while (!freebufqueue.empty())
     {
         LogBuffer *p = freebufqueue.front();
         freebufqueue.pop();
         delete p;
     }
+     std::cout << "---start ~Logger4 ---" << std::endl;
     while (!flushbufqueue.empty())
     {
         LogBuffer *p = flushbufqueue.front();

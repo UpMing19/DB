@@ -5,22 +5,24 @@
 #include <sys/time.h>
 
 #include "../log/log.h"
-#include "../DB/skiplist.h"
+#include "../DB/skiplist.hpp"
 
 int main(int argc, char **argv)
 {
 
-    LOG_INIT("./store", LogLevel::DEBUG);
-    SkipList<int, std::string> sk(6);
-    sk.insert_element(1, "D");
-    sk.insert_element(11, "D123");
-    sk.insert_element(13, "D12q3");
-    sk.insert_element(14, "D12qr3");
-    sk.insert_element(1, "Dqwrq");
-    sk.insert_element(121, "wqrqw");
-    sk.insert_element(123, "a");
-    sk.insert_element(314, "asg");
-    sk.display_list();
-    sk.dump_file();
+    LOG_INIT("./store", LogLevel::INFO);
 
+    SkipList<int, string, 12> sp(1, 10);
+    sp.insert_key(1, "DaMing");
+    sp.insert_key(2, "Shane");
+    sp.insert_key(3, "Ding");
+    sp.insert_key(2, "DaMing2");
+    sp.insert_key(8, "Oane");
+    sp.insert_key(6, "Mohan");
+    vector<KVPair<int, string>> ans = sp.get_all();
+    for (auto &p : ans)
+    {
+        cout<<p.key<<":"<<p.value<<endl;
+    }
+    sp.dump_file();
 }
