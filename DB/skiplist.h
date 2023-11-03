@@ -1,11 +1,4 @@
-
-/********************************************************************************
- * @author: MingYu Wang
- * @email: M.Wang56@newcastle.ac.uk
- * @date: 2023/10/26 17:48
- * @description:
- ********************************************************************************/
-
+#pragma once
 #include <iostream>
 #include <cstdlib>
 #include <cmath>
@@ -13,6 +6,7 @@
 #include <mutex>
 #include <fstream>
 #include "../log/log.h"
+#include "run.hpp"
 
 #define STORE_FILE "../store/dumpFile"
 #define READ_FILE "../store/readFile"
