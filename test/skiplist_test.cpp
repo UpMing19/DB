@@ -5,7 +5,7 @@
 #include <sys/time.h>
 
 #include "../log/log.h"
-#include "../DB/skiplist.hpp"
+#include "../DB/skiplist.h"
 
 int main(int argc, char **argv)
 {
