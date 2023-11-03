@@ -5,8 +5,7 @@
  * @description:
  ********************************************************************************/
 
-#ifndef __SKIPLIST_LOG__
-#define __SKIPLIST_LOG__
+#pragma once
 
 #include <sys/time.h>
 #include <stdio.h>
@@ -127,4 +126,3 @@ public:
 
 };
 
-#endif

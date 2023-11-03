@@ -1,7 +1,4 @@
-#ifndef __SKIPLIST__
-#define __SKIPLIST__
-
-
+#pragma once
 #include "../log/log.h"
 #include "run.hpp"
 #include <cstdint>
@@ -322,7 +319,7 @@ private:
     ofstream _file_writer;
     ifstream _file_reader;
 };
-#endif
+
 /*
  return ffs(rand() & ((1 << MAXLEVEL) - 1)) - 1;
 */

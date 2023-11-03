@@ -1,5 +1,4 @@
-#ifndef __SKIPLIST_RUN__
-#define __SKIPLIST_RUN__
+#pragma once
 
 #include <stdio.h>
 #include <cstdint>
@@ -54,4 +53,3 @@ Run<K,V>::~Run(){
 
 }
 
-#endif
