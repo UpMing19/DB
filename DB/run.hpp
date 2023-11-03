@@ -31,7 +31,7 @@ struct KVPair
     }
 };
 template <class K, typename V>
-class run
+class Run
 {
 public:
     virtual ~Run();
