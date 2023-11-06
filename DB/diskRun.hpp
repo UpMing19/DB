@@ -283,4 +283,48 @@ private:
             exit(EXIT_FAILURE);
         }
     }
+    void doUnmap()
+    {
+        size_t filesize = _capacity * sizeof(KVPair_t);
+
+        if (munmap(map, filesize) == -1)
+        {
+            perror("Error un-mmapping the file");
+        }
+
+        close(fd);
+        fd = -5;
+    }
+
+    void doubleSize()
+    {
+        unsigned long new_capacity = _capacity * 2;
+
+        size_t new_filesize = new_capacity * sizeof(KVPair_t);
+        int result = lseek(fd, new_filesize - 1, SEEK_SET);
+        if (result == -1)
+        {
+            close(fd);
+            perror("Error calling lseek() to 'stretch' the file");
+            exit(EXIT_FAILURE);
+        }
+
+        result = write(fd, "", 1);
+        if (result != 1)
+        {
+            close(fd);
+            perror("Error writing last byte of the file");
+            exit(EXIT_FAILURE);
+        }
+
+        map = (KVPair<K, V> *)mmap(0, new_filesize, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+        if (map == MAP_FAILED)
+        {
+            close(fd);
+            perror("Error mmapping the file");
+            exit(EXIT_FAILURE);
+        }
+
+        _capacity = new_capacity;
+    }
 };
