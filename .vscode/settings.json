@@ -86,6 +86,7 @@
         "random": "cpp",
         "cfenv": "cpp",
         "cinttypes": "cpp",
-        "typeindex": "cpp"
+        "typeindex": "cpp",
+        "future": "cpp"
     }
 }

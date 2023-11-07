@@ -46,7 +46,7 @@ public:
         {
             size = 0;
             max = mx;
-            arr = vector<KVIntPair_t>(sz, mx)
+            arr = vector<KVIntPair_t>(sz, mx);
         }
         void push(KVIntPair_t blob)
         {
@@ -169,7 +169,7 @@ public:
     void addRunByArray(KVPair_t *RunToAdd, const unsigned long runLen)
     {
         assert(_activeRun < _numRuns);
-        assert(runLne == _runSize);
+        assert(runLen == _runSize);
         runs[_activeRun]->writeData(RunToAdd, 0, runLen);
         runs[_activeRun]->constructIndex();
         _activeRun++;
@@ -184,12 +184,12 @@ public:
         }
         return toMerge;
     }
-    void freeMmergeRuns(vector<DiskRun<K, V> *> &toFree)
+    void freeMergeRuns(vector<DiskRun<K, V> *> &toFree)
     {
         assert(toFree.size() == _mergeSize);
         for (int i = 0; i < _mergeSize; i++)
         {
-            assert(toFree[i]->level == _level);
+            assert(toFree[i]->_level == _level);
             delete toFree[i];
         }
         runs.erase(runs.begin(), runs.begin() + _mergeSize);
@@ -214,8 +214,8 @@ public:
     }
     V lookup(const K &key, bool &found)
     {
-        int maxRunToSearch = levelFull() ? _numRuns - 1, _activeRun - 1;
-        for (int i = maxRunToSearch; i > = 0; i--)
+        int maxRunToSearch = levelFull() ? _numRuns - 1: _activeRun - 1;
+        for (int i = maxRunToSearch; i >= 0; i--)
         {
 
             if (runs[i]->maxKey == INT_MIN || key < runs[i]->minKey || key > runs[i]->maxKey || !runs[i]->bf.mayContain(&key, sizeof(K)))

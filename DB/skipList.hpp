@@ -1,5 +1,5 @@
 #pragma once
-#include "../log/log.h"
+
 #include "run.hpp"
 #include <cstdint>
 #include <cstdlib>
@@ -8,7 +8,7 @@
 #include <vector>
 #include <string>
 #include <fstream>
-
+#include <mutex>
 using namespace std;
 
 #define store_file "./store/dumFile"
@@ -82,7 +82,7 @@ public:
     void insert_key(const K &key, const V &value)
     {
         mtx.lock();
-        LOG(LogLevel::INFO,"insert now\n");
+       // LOG(LogLevel::INFO,"insert now\n");
         if (key > max)
         {
             max = key;
@@ -189,39 +189,6 @@ public:
         }
     }
 
-    void dump_file()
-    {
-        LOG(LogLevel::INFO, "start dump file....\n");
-        _file_writer.open(store_file);
-        Node *cur = p_listHead->_forward[1];
-        int num = 0;
-        while (cur != p_listTail)
-        {
-            _file_writer << cur->key << ":" << cur->value << endl;
-            LOG(LogLevel::INFO, "%d key has dump\n", ++num);
-            cur = cur->_forward[1];
-        }
-        _file_writer.flush();
-        _file_writer.close();
-        LOG(LogLevel::INFO, "finish dump file....\n");
-    }
-
-    void load_file()
-    {
-        LOG(LogLevel::INFO, "start load file....\n");
-
-        _file_reader.open(store_file);
-
-        string line, key, value;
-        while (getline(_file_reader, line))
-        {
-            key = line.substr(0, line.find(":"));
-            value = line.substr(line.find(":") + 1, line.length());
-            insert_key(stoi(key), value);
-        }
-        _file_reader.close();
-        LOG(LogLevel::INFO, "finish  load file....\n");
-    }
 
     vector<KVPair<K, V>> get_all()
     {

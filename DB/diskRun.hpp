@@ -26,6 +26,15 @@ class DiskRun
 {
     friend class DiskLevel<K, V>;
 
+private:
+    unsigned long _capacity;
+    string _filename;
+    int _level;
+    vector<K> _fencePointers;
+    unsigned _iMaxFP;
+    unsigned _runID;
+    double _bf_fp;
+
 public:
     typedef KVPair<K, V> KVPair_t;
 
@@ -48,7 +57,9 @@ public:
     K minKey = INT_MIN;
     K maxKey = INT_MAX;
 
-    DiskRun<K, V>(unsigned long capacity, unsigned int pageSize, int level, int runID, double bf_fp) : _capacity(capacity), _level(level), _iMaxFP(0), _pageSize(pageSize), _runID(runID), _bf_fp(bf_fp)
+    DiskRun<K, V>(unsigned long capacity, unsigned int pageSize, int level, int runID, double bf_fp):
+     _capacity(capacity), _level(level), _iMaxFP(0), pageSize(pageSize), _runID(runID), 
+     _bf_fp(bf_fp),bf(capacity, bf_fp)
     {
         _filename = "C_" + to_string(level) + "_" + to_string(runID) + ".txt";
         size_t filesize = capacity * sizeof(KVPair_t);
@@ -61,7 +72,7 @@ public:
             perror("Error to open file for writing ");
             exit(EXIT_FAILURE);
         }
-        result = lseek(fd, filesize, -1, SEEK_SET);
+        result = lseek(fd, filesize -1, SEEK_SET);
         if (result == -1)
         {
             close(fd);
@@ -89,7 +100,7 @@ public:
     {
         fsync(fd);
         doUnmap();
-        if (remove(_filename.c_str))
+        if (remove(_filename.c_str()))
         {
             perror(("Error removing file " + string(_filename)).c_str());
             exit(EXIT_FAILURE);
@@ -157,7 +168,7 @@ public:
         return L;
     }
 
-    void get_flanking_range(const K &key, const unsigned long &start, const unsigned long &end)
+    void get_flanking_FP(const K &key,  unsigned long &start,  unsigned long &end)
     {
         if (_iMaxFP <= 0)
         {
@@ -212,17 +223,18 @@ public:
         }
     }
 
-    void get_index(const K &key, bool &found)
+    unsigned long get_index(const K &key, bool &found)
     {
         unsigned long start, end;
-        get_flanking_range(key, start, end);
+        get_flanking_FP(key, start, end);
         return binary_search(start, end - start + 1, key, found);
     }
 
     V lookup(const K &key, bool &found)
     {
-        unsigned long idx = get_index(key, found);
-        return found ? map[idx].value : V(NULL);
+          unsigned long idx = get_index(key, found);
+         V ret = map[idx].value;
+         return found ? ret : (V) NULL;
     }
 
     void range(const K &key1, const K &key2, unsigned long &i1, unsigned long &i2)
@@ -256,14 +268,8 @@ public:
         cout << endl;
     }
 
+
 private:
-    unsigned long _capacity;
-    string _filename;
-    int _level;
-    vector<K> _fencePointers;
-    unsigned _iMaxFP;
-    unsigned _runID;
-    double _bf_fp;
 
     void doMap()
     {

@@ -11,14 +11,15 @@ class HashTable
 {
 private:
     KVPair<K, V> *table;
-
+    KVPair<K,V> EMPTY = {INT_MIN, INT_MIN};
 public:
     unsigned long _size;
     unsigned long _elts;
+
     HashTable(unsigned long size) : _size(size * 2), _elts(0)
     {
         table = new KVPair<K, V>[_size]();
-        fill(table, table + _size, (KVPair<K, V>)empty);
+        fill(table, table + _size, (KVPair<K, V>)EMPTY);
     }
     ~HashTable()
     {
@@ -34,15 +35,15 @@ public:
     {
         _size *= 2;
         auto newTable = new KVPair<K, V>[_size]();
-        fill(newTable, newTable + _size, (KVPair<K, V>)empty);
+        fill(newTable, newTable + _size, (KVPair<K, V>)EMPTY);
         for (unsigned long i = 0; i < _size / 2; i++)
         {
-            if (table[i] != empty)
+            if (table[i] != EMPTY)
             {
                 unsigned long newHash = hashFunc(table[i].key);
                 for (int j = 0;; j++)
                 {
-                    if (newTable[(newHash + j) % _size] == empty)
+                    if (newTable[(newHash + j) % _size] == EMPTY)
                     {
                         newTable[(newHash + j) % _size] = table[i];
                         break;
@@ -58,7 +59,7 @@ public:
         unsigned long hashValue = hashFunc(key);
         for (int i = 0;; i++)
         {
-            if (table[(i + hashValue) % _size] == empty)
+            if (table[(i + hashValue) % _size] == EMPTY)
                 return false;
             else if (table[(i + hashValue) % _size].key == key && table[(i + hashValue) % +_size].value == value)
                 return true;
@@ -73,7 +74,7 @@ public:
         unsigned long hashValue = hashFunc(key);
         for (unsigned long i = 0;; i++)
         {
-            if (table[(i + hashValue) % _size] == empty)
+            if (table[(i + hashValue) % _size] == EMPTY)
             {
                 table[(i + hashValue) % _size] = {key, value};
                 _elts++;
@@ -96,7 +97,7 @@ public:
         unsigned long hashValue = hashFunc(key);
         for (unsigned long i = 0;; i++)
         {
-            if (table[(i + hashValue) % _size] == empty)
+            if (table[(i + hashValue) % _size] == EMPTY)
             {
                 table[(i + hashValue) % _size] = {key, value};
                 _elts++;

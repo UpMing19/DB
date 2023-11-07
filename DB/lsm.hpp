@@ -1,4 +1,4 @@
-#pragma once;
+#pragma once
 #include "run.hpp"
 #include "skipList.hpp"
 #include "bloom.hpp"
@@ -33,7 +33,7 @@ private:
 
 public:
     V V_TOMBSTONE = (V)TOMBSTONE;
-    metex *mergeLock;
+    mutex *mergeLock;
     vector<Run<K, V> *> C_0;
 
     vector<BloomFilter<K> *> filters;
@@ -82,40 +82,50 @@ public:
         }
     }
 
-    void inser_key(K &key, V &value)
+    void insert_key(K &key, V &value)
     {
         if (C_0[_activeRun]->num_elements() >= _eltsPerRun)
         {
             ++_activeRun;
         }
-        (_activeRun >= _num_runs)
+        if(_activeRun >= _num_runs)
         {
             do_merge();
         }
-        C_0[_activeRun]->inser_key(key, value);
+        C_0[_activeRun]->insert_key(key, value);
         filters[_activeRun]->add(&key, sizeof(K));
     }
     void delete_key(K &key)
     {
         insert_key(key, V_TOMBSTONE);
     }
-    bool loopup(K &key, V &value)
-    {
+    
+    bool lookup(K &key, V &value){
         bool found = false;
-
-        for (int i = _activeRun; i >= 0; i--)
-        {
+        for (int i = _activeRun; i >= 0; --i){
             if (key < C_0[i]->get_min() || key > C_0[i]->get_max() || !filters[i]->mayContain(&key, sizeof(K)))
                 continue;
-
-            value = C_0[i].search_key(key, found);
-            if (found)
-            {
+            
+            value = C_0[i]->search_key(key, found);
+            if (found) {
                 return value != V_TOMBSTONE;
             }
         }
+        if (mergeThread.joinable()){
+            // make sure that there isn't a merge happening as you search the disk
+            mergeThread.join();
+        }
+        // it's not in C_0 so let's look at disk.
+        for (int i = 0; i < _numDiskLevels; i++){
+            
+            value = diskLevels[i]->lookup(key, found);
+            if (found) {
+                return value != V_TOMBSTONE;
+            }
+        }
+        return false;
     }
-    vector<KVPair<K, V>> range(K &key, K &key2)
+    vector<KVPair<K, V>> range(K &key1, K &key2)
     {
         if (key2 <= key1)
             return vector<KVPair<K, V>>{};
@@ -228,8 +238,8 @@ private:
         }
 
         vector<DiskRun<K, V> *> runsToMerge = diskLevels[level - 1]->getRunsToMerge();
-        unsigned long runLen = diskLevels[level - 1]->_runSize();
-        diskLevels[level]->addRuns(runsToMerge, runLne, isLast);
+        unsigned long runLen = diskLevels[level - 1]->_runSize;
+        diskLevels[level]->addRuns(runsToMerge, runLen, isLast);
         diskLevels[level - 1]->freeMergeRuns(runsToMerge);
     }
 
@@ -245,11 +255,11 @@ private:
             delete (bf_to_merge)[i];
         }
         sort(to_merge.begin(), to_merge.end());
-        mergeLock.lock();
+        mergeLock->lock();
         if (diskLevels[0]->levelFull())
             mergeRunsToLevel(1);
         diskLevels[0]->addRunByArray(&to_merge[0], to_merge.size());
-        mergeLock.unlock();
+        mergeLock->unlock();
     }
     void do_merge()
     {

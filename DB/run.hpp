@@ -8,7 +8,7 @@ using namespace std;
 template <typename K, typename V>
 struct KVPair
 {
-    const K key;
+    K key;
     V value;
 
     bool operator==(KVPair kv) const
@@ -44,12 +44,10 @@ public:
     virtual void set_size(const unsigned long size) = 0;
     virtual vector<KVPair<K, V>> get_all() = 0;
     virtual vector<KVPair<K, V>> get_all_in_range(const K &key1, const K &key2) = 0;
-    virtual void dump_file()=0;
-    virtual void load_file()=0;
+
 };
 
 template <class K, typename V>
-Run<K,V>::~Run(){
-
+Run<K, V>::~Run()
+{
 }
-
