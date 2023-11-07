@@ -87,7 +87,17 @@ public:
     unsigned _numRuns;
     unsigned _activeRun;
     unsigned _mergeSize;
-    double _bf_fo;
+    double _bf_fp;
     vector<DiskRun<K,V> *> runs;
+
+   DiskLevel<K,V>(unsigned int pageSize,int level,unsigned long runSize,unsigned numRuns,unsigned mergeSize,double bf_fp):_pageSize(pageSize),_level(level),_runSize(runSize),_numRuns(numRuns),_mergeSize(mergeSize),_bf_fp(bf_fp){
+        KVPAIRMAX =(KVPair_t){INT_MAX,0};
+        KVINTPAIRMAX = (KVIntPair_t) {KVPAIRMAX,-1};
+
+        for(int i =0 ;i<_numRuns; i++) {
+            DiskRun<K,V> *run = new DiskRun<K,V>(_runSize,pageSize,level,i,_bf_fp);
+        }
+   }
+    
 
 };
