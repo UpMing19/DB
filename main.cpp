@@ -61,7 +61,6 @@ void insertLookupTest(){
         if ( i % 100000 == 0 ) cout << "insert " << i << endl;
         lsmTree.insert_key(to_insert[i],i);
 //        lsmTree.printElts();
-        
     }
     clock_gettime(CLOCK_MONOTONIC, &finish);
     double total_insert = (finish.tv_sec - start.tv_sec);

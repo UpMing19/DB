@@ -265,7 +265,7 @@ public:
 private:
     int generateNodeLevel()
     {
-
+         return ffs(rand() & ((1 << MAXLEVEL) - 1)) - 1;
         int level = 1;
         // TODO 了解这个公式背后的数学原理
         double ZSKIPLIST_P = 0.25;
