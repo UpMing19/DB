@@ -76,7 +76,6 @@ void insertLookupTest(){
     int lookup;
     for (int i = 0 ; i < num_inserts; i++) {
         if ( i % 100000 == 0 ) cout << "lookup " << i << endl;
-
         lsmTree.lookup(to_insert[i], lookup);
     }
     clock_gettime(CLOCK_MONOTONIC, &finish);

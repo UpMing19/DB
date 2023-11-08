@@ -61,7 +61,7 @@ public:
      _capacity(capacity), _level(level), _iMaxFP(0), pageSize(pageSize), _runID(runID), 
      _bf_fp(bf_fp),bf(capacity, bf_fp)
     {
-        _filename = "C_" + to_string(level) + "_" + to_string(runID) + ".txt";
+        _filename = "./store/C_" + to_string(level) + "_" + to_string(runID) + ".txt";
         size_t filesize = capacity * sizeof(KVPair_t);
         long result;
 

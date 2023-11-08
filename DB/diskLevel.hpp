@@ -197,7 +197,7 @@ public:
         for (int i = 0; i < _activeRun; i++)
         {
             runs[i]->_runID = i;
-            string newName = ("C_" + to_string(runs[i]->_level) + "_" + to_string(runs[i]->_runID) + ".txt");
+            string newName = ("./store/C_" + to_string(runs[i]->_level) + "_" + to_string(runs[i]->_runID) + ".txt");
 
             if (rename(runs[i]->_filename.c_str(), newName.c_str()))
             {
